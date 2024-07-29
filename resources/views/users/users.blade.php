@@ -229,21 +229,48 @@
                                         <table id="user-details" class="table table-bordered dt-responsive nowrap w-100">
                                             <thead>
                                                 <tr>
+                                                    <th>Profile Pic</th>
                                                     <th>Name</th>
                                                     <th>User Type</th>
                                                     <th>Email</th>
                                                     <th>Address</th>
                                                     <th>Contact Info</th>
+                                                    <th>Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach ($users as $user)
                                                     <tr>
+                                                        <td><img src="assets/images/users/avatar-2.jpg" alt="User Image" class="mx-4 rounded-circle avatar-md"></td>
                                                         <td><a class="user-group-details" data-id="{{ $user->userid }}" style="cursor:pointer">{{ $user->name }}</a></td>
                                                         <td>{{ $user->user_type_label }}</td>
                                                         <td>{{ $user->email_id }}</td>
                                                         <td>{{ $user->address }}</td>
                                                         <td>{{ $user->contact_info }}</td>
+                                                        <td>
+                                            <div class="dropdown">
+                                                <a class="text-dark" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="bx bx-dots-vertical"></i>
+                                                </a>
+                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                    {{-- <li><a class="dropdown-item" href="#" onclick="viewUserDetails({{ $user->user_id }})">View</a></li> --}}
+                                                    <li><a class="dropdown-item view-user-details" href="#" data-id="{{$user->userid }}">View</a></li>
+                                                    <li>
+                                                        <form action="#" method="POST" style="display: inline;">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="dropdown-item">Delete</button>
+                                                        </form>
+                                                    </li>
+                                                    <li>
+                                                        <form action="#" method="POST" style="display: inline;">
+                                                            @csrf
+                                                            <button type="submit" class="dropdown-item">Block</button>
+                                                        </form>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                                        </td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>
@@ -299,6 +326,25 @@
                     });
                 }
             });
+            $(document).on('click', '.view-user-details', function(e){
+                e.preventDefault();
+                var user_id = $(this).data('id');
+                if(user_id != '') {
+                    // Send AJAX request
+                    $.ajax({
+                        type: 'GET',
+                        url: `/user_details/${user_id}`,
+                        success: function(response) {
+                            $('#userModal').modal('show');
+                            $('#userModal .user-details-content').html(response);  
+                        },
+                        error: function(error) {
+                            console.error('Error:', error);
+                        }
+                    });
+                }
+            });
+            
 
             // start script for search
                 var divsToShow = $('#divToShow').val().split(',');

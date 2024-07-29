@@ -16,9 +16,9 @@
                             </li>
 
                             <li>
-                                <a href="javascript: void(0);" class="has-arrow">
+                                <a href="{{route('events.events')}}" class="has-arrow">
                                     <i data-feather="grid"></i>
-                                    <span data-key="t-apps">Posts</span>
+                                    <span data-key="t-apps">Events</span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
                                     <li>
