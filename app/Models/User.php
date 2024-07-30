@@ -131,9 +131,9 @@ public static function getUserSearchData($searchIn, $searchType, $suggestionText
                   DB::raw("CONCAT(users.country_code, ' ', users.phone_number) as contact_info")           
               );
               $table = 'users';
-   if ($userType) {
+  /*  if ($userType) {
         $response->where('users.user_type', $userType);
-    } 
+    }  */
   for ($i = 0; $i < count($searchIn); $i++) {
       if ($searchIn[$i] == 'block_flag') {
           if ($isVerified[$i] != 'Any') {
@@ -144,23 +144,23 @@ public static function getUserSearchData($searchIn, $searchType, $suggestionText
           if ($startDate[$i] != '' && $endDate[$i] != '') {
               $response = $response->whereBetween('users.created_datetime', [$startDate[$i], $endDate[$i]]);
           }
-      } elseif($searchIn[$i] == 'user_name') {
+      } elseif($searchIn[$i] == 'name') {
           if ($searchType[$i] == 'contains' && $suggestionText[$i] != '') {
-              $response = $response->where('user_name', 'LIKE', '%' . $suggestionText[$i] . '%');
+              $response = $response->where('name', 'LIKE', '%' . $suggestionText[$i] . '%');
           }
           if ($searchType[$i] == 'begins_with' && $suggestionText[$i] != '') {
-              $response = $response->where('user_name', 'LIKE', $suggestionText[$i] . '%');
+              $response = $response->where('name', 'LIKE', $suggestionText[$i] . '%');
           }
           if ($searchType[$i] == 'exact_match' && $suggestionText[$i] != '') {
-              $response = $response->where('user_name', '=', $suggestionText[$i]);
+              $response = $response->where('name', '=', $suggestionText[$i]);
           }
           if ($searchType[$i] == 'ends_with' && $suggestionText[$i] != '') {
-              $response = $response->where('user_name', 'LIKE', '%' . $suggestionText[$i]);
+              $response = $response->where('name', 'LIKE', '%' . $suggestionText[$i]);
           }
       }  elseif($searchIn[$i] == 'user_type') {
 
-          if ($searchType[$i] == 'exact_match' && $suggestionText[$i] != '') {
-              $response = $response->where('user_name', '=', $suggestionText[$i]);
+          if ($userType[$i] != 'Any') {
+              $response = $response->where('user_Type', '=', $userType[$i]);
           }
   
           }else {
@@ -186,6 +186,7 @@ public static function getUserSearchData($searchIn, $searchType, $suggestionText
               ->get();
     
               $userTypeLabels = [
+            
                 1 => 'High School Students',
                 2 => 'High School Professionals',
                 3 => 'College Students',

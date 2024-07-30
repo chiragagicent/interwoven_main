@@ -50,7 +50,7 @@ class UserController extends Controller
 
 
         for ($i = 0; $i < count($searchIn); $i++) {
-          if ($searchIn[$i] == 'block_flag' || $searchIn[$i] == 'created_datetime' || $searchIn[$i]=='sign_via') {
+          if ($searchIn[$i] == 'block_flag' || $searchIn[$i] == 'created_datetime' || $searchIn[$i]=='sign_via'||$searchIn[$i]=='user_type') {
             $searchType[$i] = 'exact_match';
           } else {
             $searchType[$i] = $request->search_type[$i];
@@ -112,6 +112,7 @@ class UserController extends Controller
             ->with('searchType',$searchType)
             ->with('searchIn',$searchIn)
             ->with('formCount' ,$formCount);
+            
 
         
     }

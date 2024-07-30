@@ -16,7 +16,7 @@
                             </li>
 
                             <li>
-                                <a href="{{route('events.events')}}" class="has-arrow">
+                                <a href="{{ route('events.index') }}" class="has-arrow">
                                     <i data-feather="grid"></i>
                                     <span data-key="t-apps">Events</span>
                                 </a>

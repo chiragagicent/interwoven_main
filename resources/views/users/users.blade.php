@@ -480,7 +480,7 @@
                 $('#block_flag_' + i).val('Any');
                 $('#sign_via_span_' + i).css('display', 'none');
                 // $('#gender_flag_span_' + i).val('Any');
-                // $('#user_type_span_' + i).css('display', 'none');
+                $('#user_type_span_' + i).css('display', 'none');
                 // $('#user_type' + i).val('Any');
                 // $('#report_flag_span_' + i).css('display', 'none');
                 // $('#report_flag_' + i).val('Any');
