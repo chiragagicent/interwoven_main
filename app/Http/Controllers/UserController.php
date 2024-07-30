@@ -116,5 +116,56 @@ class UserController extends Controller
 
         
     }
+
+/*     public function blockUser($id)
+      {
+
+          // Retrieve the current status of the user
+          $user = DB::table('users')
+                      ->select('users.is_blocked')
+                      ->where('users.user_id', $id)
+                      ->first();
+
+          if ($user) {
+              // Toggle the is_blocked status
+              $newStatus = $user->is_blocked ? 0 : 1;
+
+              // Update the is_blocked status in the database
+              DB::table('users')->where('users.user_id', $id)->update(['users.is_blocked' => $newStatus]);
+
+              return back()->with('success', 'User status updated successfully.');
+          }
+
+          return back()->with('error', 'User not found.');
+      } */
+
+      public function blockUser($id)
+{
+    try {
+        // Retrieve the current status of the user
+        $user = DB::table('users')
+                    ->select('users.is_blocked') // Specify the table name
+                    ->where('user_id', $id)
+                    ->first();
+
+        if ($user) {
+            // Toggle the is_blocked status
+            $newStatus = $user->is_blocked ? 0 : 1;
+
+            // Update the is_blocked status in the database
+            DB::table('users')->where('user_id', $id)->update(['is_blocked' => $newStatus]);
+
+            return back()->with('success', 'User status updated successfully.');
+        }
+
+        return back()->with('error', 'User not found.');
+    } catch (\Exception $e) {
+        // Log the exception and return an error message
+        \Log::error('Error updating user status: ' . $e->getMessage());
+        return back()->with('error', 'An error occurred while updating the user status.');
+    }
+}
+
+
     
 }

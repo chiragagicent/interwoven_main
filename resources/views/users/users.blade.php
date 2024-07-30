@@ -72,6 +72,10 @@
         text-decoration: underline;
     }
        
+    .bg-light-danger {
+    background-color: rgba(255, 0, 0, 0.1); /* Light red background */
+}
+
    
 </style>
 
@@ -240,36 +244,39 @@
                                             </thead>
                                             <tbody>
                                                 @foreach ($users as $user)
-                                                    <tr>
-                                                        <td><img src="assets/images/users/avatar-2.jpg" alt="User Image" class="mx-4 rounded-circle avatar-md"></td>
+                                                     <tr style="background-color: {{ $user->is_blocked ? 'lightcoral' : 'transparent' }};">                                                        <td><img src="assets/images/users/avatar-2.jpg" alt="User Image" class="mx-4 rounded-circle avatar-md"></td>
                                                         <td><a class="user-group-details" data-id="{{ $user->userid }}" style="cursor:pointer">{{ $user->name }}</a></td>
                                                         <td>{{ $user->user_type_label }}</td>
                                                         <td>{{ $user->email_id }}</td>
                                                         <td>{{ $user->address }}</td>
                                                         <td>{{ $user->contact_info }}</td>
                                                         <td>
-                                            <div class="dropdown">
-                                                <a class="text-dark" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="bx bx-dots-vertical"></i>
-                                                </a>
-                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                                    {{-- <li><a class="dropdown-item" href="#" onclick="viewUserDetails({{ $user->user_id }})">View</a></li> --}}
-                                                    <li><a class="dropdown-item view-user-details" href="#" data-id="{{$user->userid }}">View</a></li>
-                                                    <li>
-                                                        <form action="#" method="POST" style="display: inline;">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="dropdown-item">Delete</button>
-                                                        </form>
-                                                    </li>
-                                                    <li>
-                                                        <form action="#" method="POST" style="display: inline;">
-                                                            @csrf
-                                                            <button type="submit" class="dropdown-item">Block</button>
-                                                        </form>
-                                                    </li>
-                                                </ul>
-                                            </div>
+                                                            <div class="dropdown">
+                                                                <a class="text-dark" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                    <i class="bx bx-dots-vertical"></i>
+                                                                </a>
+                                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                                    {{-- <li><a class="dropdown-item" href="#" onclick="viewUserDetails({{ $user->user_id }})">View</a></li> --}}
+                                                                    <li><a class="dropdown-item view-user-details" href="#" data-id="{{$user->userid }}">View</a></li>
+                                                                    <li>
+                                                                        <form action="#" method="POST" style="display: inline;">
+                                                                            @csrf
+                                                                            @method('DELETE')
+                                                                            <button type="submit" class="dropdown-item">Delete</button>
+                                                                        </form>
+                                                                    </li>
+                                                                    <li>
+                                                                        <form action="/users/block/{{ $user->userid }}" method="POST" style="display: inline;">
+                                                                            @csrf
+                                                                            @if ($user->is_blocked)
+                                                                                <button type="submit" class="dropdown-item">Unblock</button>
+                                                                            @else
+                                                                                <button type="submit" class="dropdown-item">Block</button>
+                                                                            @endif
+                                                                        </form>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 @endforeach

@@ -60,6 +60,7 @@ class User extends Authenticatable
                 'users_address.city',
                 'users_address.state',
                 'users_address.zip_code',
+                'users.is_blocked',
                 DB::raw("CONCAT(users.country_code, ' ', users.phone_number) as contact_info")
             )
             ->get();
@@ -92,6 +93,7 @@ class User extends Authenticatable
             'users.email_id',
             'users.created_datetime',
             'users.profile_pic',
+            'users.is_blocked',
             'users_address.address',
             'users_address.city',
             'users_address.state',
