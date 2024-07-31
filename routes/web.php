@@ -15,12 +15,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('dashboard.dashboard');
-});
+    Route::get('/', function () {
+        return view('dashboard.dashboard');
+    });
 
-Route::get('/users',[UserController::class,'index'])->name('users.users');
-Route::get('/user_details/{id}',[UserController::class,'getUserDetails']);
-Route::post('/users/block/{id}', [UserController::class, 'blockUser']);
-Route::post('/users', [UserController::class, 'userSearch']);
-Route::resource('events', EventsController::class);
+    Route::get('/users',[UserController::class,'index'])->name('users.users');
+    Route::get('/user_details/{id}',[UserController::class,'getUserDetails']);
+    Route::post('/users/block/{id}', [UserController::class, 'blockUser']);
+    Route::post('/users', [UserController::class, 'userSearch']);
+    Route::resource('events', EventsController::class);
+    //Route::get('/events/show/{id}', [EventsController::class, 'show']);

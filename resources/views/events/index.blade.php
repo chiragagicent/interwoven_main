@@ -1,6 +1,42 @@
 
 @extends('layouts.master')
 @section('content')
+<style>
+#offline_address {
+    border: none; /* Remove the default border */
+    box-shadow: none; /* Remove box shadow */
+    padding-bottom: 5px; /* Optional: Add some padding to the bottom */
+}
+
+#offline_address:focus {
+    outline: none; /* Remove the default outline */
+    border-bottom: 1px transparent gray; /* Change border color on focus */
+}
+
+.suggestion-box {
+    display: none; /* Initially hide the suggestion box */
+    border: 1px solid #ccc;
+    max-height: 150px;
+    overflow-y: auto;
+    position: absolute;
+    z-index: 1000;
+    background-color: #fff;
+    width: 100%;
+}
+
+.suggestion-box.visible {
+    display: block; /* Show the suggestion box only when it has the 'active' class */
+}
+.suggestion-item {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.suggestion-item:hover {
+    background-color: #f0f0f0;
+}
+
+</style>
 <div class="main-content">
     <div class="page-content">
         <div class="container-fluid">
@@ -15,18 +51,39 @@
                 </div>
             </div>
 
-            <div class="row">
+            {{-- <div class="row">
                 @foreach ($events as $event)
                 <div class="col-md-4">
                     <div class="card">
                         <img class="card-img-top img-fluid" src="assets/images/small/img-1.jpg" alt="Card image cap">
                         <div class="card-body d-flex flex-column">
+                            <div>
+                                 <div class="dropdown">
+                                 <a class="text-dark" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                     <i class="bx bx-dots-vertical"></i>
+                                 </a>
+                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                     <li><a class="dropdown-item view-user-details" href="#">View</a></li>
+                                     <li>
+                                         <form action="#" method="POST" style="display: inline;">
+                                             <button type="submit" class="dropdown-item">Delete</button>
+                                         </form>
+                                     </li>
+                                     <li>
+                                         <form action="#" method="POST" style="display: inline;">
+                                                 <button type="submit" class="dropdown-item">Block</button>
+                                         </form>
+                                     </li>
+                                 </ul>
+                                </div>  
+                            </div>
                             <h4 class="card-title">{{ $event->title }}</h4>
+                          
                             <p class="card-text">{{ $event->description }}</p>
                             <div class="mt-auto d-flex justify-content-between text-muted opacity-75">
                                 <div>
                                     <i class="fas fa-calendar-alt me-1"></i>
-                                    {{ \Carbon\Carbon::parse($event->created_datetime)->format('Y-m-d') }} <!-- Convert to Carbon -->
+                                    {{ \Carbon\Carbon::parse($event->created_datetime)->format('Y-m-d') }} 
                                 </div>
                                 <div>
                                     <i class="fas fa-clock me-1"></i>
@@ -38,7 +95,52 @@
                     </div>
                 </div>
                 @endforeach
+            </div> --}}
+            <div class="row">
+    @foreach ($events as $event)
+    <div class="col-md-4">
+        <div class="card">
+            <img class="card-img-top img-fluid" src="assets/images/small/img-1.jpg" alt="Card image cap">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <h4 class="card-title">{{ $event->title }}</h4>
+                    <div class="dropdown">
+                        <a class="text-dark" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bx bx-dots-vertical"></i>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <li><a class="dropdown-item view-event-details" href="#" data-id="{{$event->event_id}}">View</a></li>
+                                <li>
+                                        <form action="{{ route('events.destroy', $event->event_id) }}" method="POST" style="display: inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="dropdown-item" onclick="return confirm('Are you sure you want to delete this event?');">Delete</button>
+                                        </form>
+                                </li>
+                                <li>
+                                    <a href="#" class="dropdown-item edit-event-details" data-id="{{$event->event_id}}">Edit</a>
+                                </li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="card-text">{{ $event->description }}</p>
+                <div class="mt-auto d-flex justify-content-between text-muted opacity-75">
+                    <div>
+                        <i class="fas fa-calendar-alt me-1"></i>
+                        {{ \Carbon\Carbon::parse($event->created_datetime)->format('Y-m-d') }}
+                    </div>
+                    <div>
+                        <i class="fas fa-clock me-1"></i>
+                        {{ $event->start_time }}
+                    </div>
+                </div>
+                <a  class="btn btn-primary waves-effect waves-light mt-3 view-event-details" href="#" data-id="{{$event->event_id}}" >Details</a>
             </div>
+        </div>
+    </div>
+    @endforeach
+</div>
+
 
 
 
@@ -59,7 +161,32 @@
             </div>
         </div>
     </div>
-
+    <div class="modal fade bs-example-modal-xl" id="eventDetailModal" tabindex="-1" style="z-index: 10000; margin-top:50px;" role="dialog"aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userModalLabel">Event Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body event-detail">
+                    <!-- Dynamic event details will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade bs-example-modal-xl" id="eventEditModal" tabindex="-1" style="z-index: 10000; margin-top:50px;" role="dialog"aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userModalLabel">Event Edit</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body event-edit">
+                    <!-- Event details to be edited will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 </div>
@@ -104,6 +231,48 @@ $(document).on('submit', '#eventCreateForm', function(event) {
         },
         error: function(error) {
             console.error('Error:', error);
+        }
+    });
+});
+
+$(document).on('click', '.view-event-details', function(e) {
+    e.preventDefault();
+    
+    var eventId = $(this).data('id'); // Get the event ID from the clicked element
+
+    // Send AJAX request
+    $.ajax({
+        type: 'GET',
+        url: `/events/${eventId}`, // Use the event ID in the URL
+        success: function(response) {
+            console.log('Response:', response); // Log the response
+            $('#eventDetailModal').modal('show');
+            $('#eventDetailModal .event-detail').html(response);  
+        },
+        error: function(error) {
+            console.error('Error:', error);
+            alert('An error occurred while loading the modal.'); // Notify about the error
+        }
+    });
+});
+
+$(document).on('click', '.edit-event-details', function(e) {
+    e.preventDefault();
+    
+    var eventId = $(this).data('id'); // Get the event ID from the clicked element
+
+    // Send AJAX request
+    $.ajax({
+        type: 'GET',
+        url: `/events/${eventId}/edit`, // Use the event ID in the URL
+        success: function(response) {
+            console.log('Response:', response); // Log the response
+            $('#eventEditModal').modal('show');
+            $('#eventEditModal .event-edit').html(response);  
+        },
+        error: function(error) {
+            console.error('Error:', error);
+            alert('An error occurred while loading the modal.'); // Notify about the error
         }
     });
 });

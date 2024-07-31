@@ -258,13 +258,13 @@
                                                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                                                     {{-- <li><a class="dropdown-item" href="#" onclick="viewUserDetails({{ $user->user_id }})">View</a></li> --}}
                                                                     <li><a class="dropdown-item view-user-details" href="#" data-id="{{$user->userid }}">View</a></li>
-                                                                    <li>
+                                                                    {{-- <li>
                                                                         <form action="#" method="POST" style="display: inline;">
                                                                             @csrf
                                                                             @method('DELETE')
                                                                             <button type="submit" class="dropdown-item">Delete</button>
                                                                         </form>
-                                                                    </li>
+                                                                    </li> --}}
                                                                     <li>
                                                                         <form action="/users/block/{{ $user->userid }}" method="POST" style="display: inline;">
                                                                             @csrf

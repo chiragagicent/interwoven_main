@@ -130,9 +130,10 @@ public static function getUserSearchData($searchIn, $searchType, $suggestionText
                   'users.user_id as userid',
                   'users.user_type',
                   'users_address.address',
+                  'users.is_blocked',
                   DB::raw("CONCAT(users.country_code, ' ', users.phone_number) as contact_info")           
               );
-              $table = 'users';
+            
   /*  if ($userType) {
         $response->where('users.user_type', $userType);
     }  */

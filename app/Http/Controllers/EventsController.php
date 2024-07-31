@@ -17,16 +17,31 @@ class EventsController extends Controller
     {
         return view('modals.event_create_modal');
     }
+    public function show(Event $event) {
+        
+    return view('modals.event_detail_modal')->with('event', $event);
+    }
+    public function edit($id)
+    {
+        $event = DB::table('events')->where('event_id', $id)->first();
+        return view('modals.event_edit_modal')->with('event', $event);
+    }
+
+    public function update(Request $request, $id)
+    {
+
+        $data = $request->except(['_token', '_method']); // Exclude CSRF token and method fields
+        DB::table('events')->where('event_id', $id)->update($data);
+        return redirect()->route('events.index')->with('success', 'Event updated successfully!');
+    }
+    public function destroy($id)
+    {
+        DB::table('events')->where('event_id', $id)->delete();
+        return redirect()->route('events.index')->with('success', 'Event deleted successfully!');
+    }
 
     public function store(Request $request)
     {
-       /*  $request->validate([
-            'title' => 'required|max:100',
-            'date' => 'required|date',
-            'start_time' => 'required|date_format:H:i',
-            'description' => 'required',
-        ]); */
-
         DB::table('events')->insert([
             'event_id'=>$request->event_id,
             'admin_id' => "1", // You may want to change this to the currently logged-in user ID
