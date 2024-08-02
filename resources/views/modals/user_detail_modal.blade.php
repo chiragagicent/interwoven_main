@@ -1,10 +1,19 @@
 {{-- partials/user_details.blade.php --}}
 {{-- @if(isset($user)) --}}
+<style>
+  .avatar-l {
+    width: 150px; 
+    height: 150px; 
+    object-fit: cover;
+    border-radius: 50%; 
+  }
+</style>
 <div class="text-center mb-4">
     
     <div class="row">
         <div class="col-md-6">
-            <img src="assets/images/users/avatar-2.jpg" alt="User Image" class="mx-4 rounded-circle avatar-l">        
+            <img src="{{ $users->profile_pic ? asset('storage/' . $users->profile_pic) :'assets/images/users/avatar-2.jpg' }}" alt="User Image" class="mx-4 rounded-circle avatar-l">
+
         </div>
         <div class="col-md-6 ">
             <div class="mb-3">

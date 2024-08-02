@@ -27,13 +27,22 @@ class EventsController extends Controller
         return view('modals.event_edit_modal')->with('event', $event);
     }
 
-    public function update(Request $request, $id)
-    {
+        public function update(Request $request, $id)
+        {
+            $data = $request->except(['_token', '_method']); // Exclude CSRF token and method fields
 
-        $data = $request->except(['_token', '_method']); // Exclude CSRF token and method fields
-        DB::table('events')->where('event_id', $id)->update($data);
-        return redirect()->route('events.index')->with('success', 'Event updated successfully!');
-    }
+            if ($request->hasFile('media_url')) {
+                $file = $request->file('media_url');
+                $path = $file->store('media', 'public'); // Store the image in the 'public/media' directory
+                $data['media_url'] = $path; // Save the file path to the media_url field
+            }
+
+            // Update the event in the database using DB Query Builder
+            DB::table('events')->where('event_id', $id)->update($data);
+            
+            return redirect()->route('events.index')->with('success', 'Event updated successfully!');
+        }
+
     public function destroy($id)
     {
         DB::table('events')->where('event_id', $id)->delete();
@@ -42,12 +51,26 @@ class EventsController extends Controller
 
     public function store(Request $request)
     {
+/*         // Debug information
+        if ($request->hasFile('media')) {
+            $file = $request->file('media');
+            $path = $file->store('media', 'public'); // Store in 'storage/app/public/media' directory
+            dd($path); // Debugging: Output the path to check if the file is uploaded correctly
+        } else {
+            dd('No file uploaded'); // Debugging: Output message if no file is uploaded
+        } */
+
+        if ($request->hasFile('media')) {
+            $file = $request->file('media');
+            $path = $file->store('media', 'public'); // Store in 'storage/app/public/media' directory
+        }
         DB::table('events')->insert([
             'event_id'=>$request->event_id,
-            'admin_id' => "1", // You may want to change this to the currently logged-in user ID
+            'admin_id' => "1", 
             'title' => $request->title,
-            'media_url' => $request->media_url,
-            'date' => $request->date,
+            //'media_url' => $request->media_url,
+            'date'=>$request->date,
+            'media_url' => $path ?? 'assets/images/small/img-1.jpg',
             'start_time' => $request->start_time,
             'description' => $request->description,
             'mode' => $request->mode,

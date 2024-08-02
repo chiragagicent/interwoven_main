@@ -24,4 +24,5 @@ use Illuminate\Support\Facades\Route;
     Route::post('/users/block/{id}', [UserController::class, 'blockUser']);
     Route::post('/users', [UserController::class, 'userSearch']);
     Route::resource('events', EventsController::class);
+
     //Route::get('/events/show/{id}', [EventsController::class, 'show']);

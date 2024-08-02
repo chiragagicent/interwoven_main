@@ -1,4 +1,4 @@
-<form id="eventCreateForm">
+<form id="eventCreateForm"  enctype="multipart/form-data">
     @csrf 
     <div class="row">
         <div class="col-md-6">
@@ -8,12 +8,19 @@
                     <input type="text" class="form-control" id="title" name="title" placeholder="Enter Event Title" required>
                 </div>
             </div>
-            <div class="row mb-4">
+            {{-- <div class="row mb-4">
                 <label for="media_url" class="col-sm-3 col-form-label">Media URL</label>
                 <div class="col-sm-9">
                     <input type="text" class="form-control" id="media_url" name="media_url" placeholder="Enter Media URL" required>
                 </div>
+            </div> --}}
+            <div class="row mb-4">
+                <label for="media" class="col-sm-3 col-form-label">Media</label>
+                <div class="col-sm-9">
+                    <input type="file" class="form-control" id="media" name="media" accept="image/*,video/*" required>
+                </div>
             </div>
+
             <div class="row mb-4">
                 <label for="date" class="col-sm-3 col-form-label">Date</label>
                 <div class="col-sm-9">
@@ -86,18 +93,18 @@
 </form>
 
 <script>
-    // Initialize the map
+    
     var map = L.map('map').setView([51.505, -0.09], 13);
 
-    // Add OpenStreetMap tile layer
+    
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19
     }).addTo(map);
 
-    // Add a marker
+    
     var marker = L.marker([51.5, -0.09], { draggable: true }).addTo(map);
 
-    // Function to update marker position and input fields
+    
     function updateMarker(lat, lng) {
         marker.setLatLng([lat, lng]).update();
         map.setView([lat, lng], 13);
@@ -116,7 +123,7 @@
             .catch(error => console.error('Error:', error));
     }
 
-    // Function to forward geocode address to get coordinates
+    
     function forwardGeocode(address) {
         fetch(`https://nominatim.openstreetmap.org/search?q=${address}&format=json&addressdetails=1`)
             .then(response => response.json())
@@ -129,7 +136,7 @@
             });
     }
 
-    // Event listener for mode selection
+    
     document.getElementById('mode').addEventListener('change', function() {
         var onlineFields = document.getElementById('onlineFields');
         var offlineFields = document.getElementById('offlineFields');
@@ -137,18 +144,18 @@
         var latField = document.getElementById('latField');
         var longField = document.getElementById('longField');
 
-        if (this.value === "1") { // Online selected
-            onlineFields.style.display = 'flex'; // Change to flex for inline
+        if (this.value === "1") { 
+            onlineFields.style.display = 'flex'; 
             offlineFields.style.display = 'none';
             mapField.style.display = 'none';
             latField.style.display = 'none';
             longField.style.display = 'none';
-        } else { // Offline selected
+        } else { 
             onlineFields.style.display = 'none';
-            offlineFields.style.display = 'flex'; // Change to flex for inline
-            mapField.style.display = 'none'; // Hide map initially
-            latField.style.display = 'none'; // Hide lat field
-            longField.style.display = 'none'; // Hide long field
+            offlineFields.style.display = 'flex'; 
+            mapField.style.display = 'none'; 
+            latField.style.display = 'none'; 
+            longField.style.display = 'none'; 
         }
     });
 
@@ -184,11 +191,11 @@ function displaySuggestions(suggestions) {
     suggestionBox.innerHTML = '';
 
     if (suggestions.length === 0) {
-        suggestionBox.classList.remove('visible'); // Hide suggestion box if no suggestions
+        suggestionBox.classList.remove('visible'); 
         return;
     }
 
-    suggestionBox.classList.add('visible'); // Show suggestion box if there are suggestions
+    suggestionBox.classList.add('visible');
 
     suggestions.forEach(suggestion => {
         var suggestionItem = document.createElement('div');
@@ -198,7 +205,7 @@ function displaySuggestions(suggestions) {
             document.getElementById('offline_address').value = suggestion.display_name;
             updateMarker(suggestion.lat, suggestion.lon);
             suggestionBox.innerHTML = '';
-            suggestionBox.classList.remove('visible'); // Hide suggestions after selection
+            suggestionBox.classList.remove('visible');
         });
         suggestionBox.appendChild(suggestionItem);
     });
@@ -211,19 +218,19 @@ document.getElementById('offline_address').addEventListener('input', function() 
     if (query.length > 3) {
         nominatimSearch(query);
     } else {
-        suggestionBox.classList.remove('visible'); // Hide suggestion box if input is less than 4 characters
+        suggestionBox.classList.remove('visible');
     }
 });
 
 
-    // Click event on map to get coordinates
+
     map.on('click', function(e) {
         var lat = e.latlng.lat;
         var lon = e.latlng.lng;
         updateMarker(lat, lon);
     });
 
-    // Drag event on marker to get coordinates
+
     marker.on('dragend', function(e) {
         var lat = e.target.getLatLng().lat;
         var lon = e.target.getLatLng().lng;

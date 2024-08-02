@@ -35,6 +35,13 @@
 .suggestion-item:hover {
     background-color: #f0f0f0;
 }
+.card img {
+    width: 100%; /* Make the image fill the card width */
+    height: 200px; /* Set a fixed height for the card */
+    object-fit: cover; /* Crop the image to fill the area */
+    border-radius: 8px; /* Optional: add some rounded corners */
+}
+
 
 </style>
 <div class="main-content">
@@ -98,46 +105,46 @@
             </div> --}}
             <div class="row">
     @foreach ($events as $event)
-    <div class="col-md-4">
-        <div class="card">
-            <img class="card-img-top img-fluid" src="assets/images/small/img-1.jpg" alt="Card image cap">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start">
-                    <h4 class="card-title">{{ $event->title }}</h4>
-                    <div class="dropdown">
-                        <a class="text-dark" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bx bx-dots-vertical"></i>
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <li><a class="dropdown-item view-event-details" href="#" data-id="{{$event->event_id}}">View</a></li>
-                                <li>
-                                        <form action="{{ route('events.destroy', $event->event_id) }}" method="POST" style="display: inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="dropdown-item" onclick="return confirm('Are you sure you want to delete this event?');">Delete</button>
-                                        </form>
-                                </li>
-                                <li>
-                                    <a href="#" class="dropdown-item edit-event-details" data-id="{{$event->event_id}}">Edit</a>
-                                </li>
-                        </ul>
+            <div class="col-md-4">
+                <div class="card">
+                    <img class="card-img-top img-fluid" src="{{ $event->media_url ? asset('storage/' . $event->media_url) : 'assets/images/small/img-1.jpg' }}" alt="Card image cap">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <h4 class="card-title">{{ $event->title }}</h4>
+                            <div class="dropdown">
+                                <a class="text-dark" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bx bx-dots-vertical"></i>
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <li><a class="dropdown-item view-event-details" href="#" data-id="{{$event->event_id}}">View</a></li>
+                                        <li>
+                                                <form action="{{ route('events.destroy', $event->event_id) }}" method="POST" style="display: inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="dropdown-item" onclick="return confirm('Are you sure you want to delete this event?');">Delete</button>
+                                                </form>
+                                        </li>
+                                        <li>
+                                            <a href="#" class="dropdown-item edit-event-details" data-id="{{$event->event_id}}">Edit</a>
+                                        </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <p class="card-text">{{ $event->description }}</p>
+                        <div class="mt-auto d-flex justify-content-between text-muted opacity-75">
+                            <div>
+                                <i class="fas fa-calendar-alt me-1"></i>
+                                {{ \Carbon\Carbon::parse($event->created_datetime)->format('Y-m-d') }}
+                            </div>
+                            <div>
+                                <i class="fas fa-clock me-1"></i>
+                                {{ $event->start_time }}
+                            </div>
+                        </div>
+                        <a  class="btn btn-primary waves-effect waves-light mt-3 view-event-details" href="#" data-id="{{$event->event_id}}" >Details</a>
                     </div>
                 </div>
-                <p class="card-text">{{ $event->description }}</p>
-                <div class="mt-auto d-flex justify-content-between text-muted opacity-75">
-                    <div>
-                        <i class="fas fa-calendar-alt me-1"></i>
-                        {{ \Carbon\Carbon::parse($event->created_datetime)->format('Y-m-d') }}
-                    </div>
-                    <div>
-                        <i class="fas fa-clock me-1"></i>
-                        {{ $event->start_time }}
-                    </div>
-                </div>
-                <a  class="btn btn-primary waves-effect waves-light mt-3 view-event-details" href="#" data-id="{{$event->event_id}}" >Details</a>
             </div>
-        </div>
-    </div>
     @endforeach
 </div>
 
@@ -217,13 +224,34 @@ $(document).on('click', '.event-create-modal', function(e) {
 });
 
 
+/* $(document).on('submit', '#eventCreateForm', function(event) {
+    event.preventDefault(); 
+
+    $.ajax({
+        type: 'POST',
+        url: '{{ route('events.store') }}',
+        data: $(this).serialize(), 
+        success: function(response) {
+            $('#eventModal').modal('hide'); 
+            location.reload(); 
+        },
+        error: function(error) {
+            console.error('Error:', error);
+        }
+    });
+}); */
 $(document).on('submit', '#eventCreateForm', function(event) {
     event.preventDefault(); // Prevent default form submission
+
+    // Create a FormData object
+    var formData = new FormData(this);
 
     $.ajax({
         type: 'POST',
         url: '{{ route('events.store') }}', // Update with your route
-        data: $(this).serialize(), // Serialize form data
+        data: formData,
+        contentType: false, // Important for file upload
+        processData: false, // Important for file upload
         success: function(response) {
             $('#eventModal').modal('hide'); // Hide the modal
             // Optionally, you can refresh the events list here or display a success message
@@ -234,6 +262,7 @@ $(document).on('submit', '#eventCreateForm', function(event) {
         }
     });
 });
+
 
 $(document).on('click', '.view-event-details', function(e) {
     e.preventDefault();
@@ -276,6 +305,14 @@ $(document).on('click', '.edit-event-details', function(e) {
         }
     });
 });
+    document.getElementById('eventEditForm').addEventListener('submit', function(event) {
+        console.log("Form submitted");
+        // Optionally log the form data
+        const formData = new FormData(event.target);
+        for (const [key, value] of formData.entries()) {
+            console.log(key + ': ' + value);
+        }
+    });
 
 });
 </script>
