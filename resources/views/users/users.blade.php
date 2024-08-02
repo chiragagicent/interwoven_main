@@ -245,10 +245,7 @@
                                             <tbody>
                                                 @foreach ($users as $user)
                                                      <tr style="background-color: {{ $user->is_blocked ? 'lightcoral' : 'transparent' }};">                                                       
-                                                        {{-- <td><img src="assets/images/users/avatar-2.jpg" alt="User Image" class="mx-4 rounded-circle avatar-md"></td> --}}
-                                                            <td>
-                                                                <img src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) :'assets/images/users/avatar-2.jpg' }}" alt="User Image" class="mx-4 rounded-circle avatar-md">
-                                                            </td>
+                                                        <td><img src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('assets/images/users/avatar-2.jpg') }}" alt="User Image" class="mx-4 rounded-circle avatar-md"></td>
                                                         <td><a class="user-group-details" data-id="{{ $user->userid }}" style="cursor:pointer">{{ $user->name }}</a></td>
                                                         <td>{{ $user->user_type_label }}</td>
                                                         <td>{{ $user->email_id }}</td>
