@@ -478,7 +478,7 @@
 
                 function showHideSpan(search_in, i) {
 
-                if (search_in == 'name' || search_in == 'email_id' || search_in=='phone_number') 
+                if (search_in == 'name' || search_in == 'email_id' || search_in=='contact_info') 
                 {
                 $('#suggestion_text_span_' + i).css('display', 'block');
                 $('#search_type' + i).removeAttr("disabled");
@@ -567,6 +567,8 @@
                 {
                 $('#user_type_span_' + i).css('display', 'block'); // Show User Type dropdown
                 $('#suggestion_text_span_' + i).css('display', 'none'); // Hide text input
+                $('.date_range' + i).val('');
+                $('#date_range_span_' + i).css('display', 'none');
                 }
 
                 }
@@ -579,3 +581,4 @@
 
 
 @endsection
+

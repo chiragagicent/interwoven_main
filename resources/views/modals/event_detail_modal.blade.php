@@ -1,8 +1,30 @@
 
- <div class="row">
+ <style>
+    .img-thumbnail {
+        width: 100%;
+        max-height: 400px; 
+        object-fit: contain; 
+    }
+
+    .event-details {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .event-details .col-md-6 {
+        flex: 1 1 50%; 
+    }
+
+    .event-details .form-control,
+    .event-details textarea {
+        margin-bottom: 10px; 
+    }
+</style>
+
+<div class="event-details">
     <div class="col-md-6">
         <div class="mb-3">
-             <img src="{{ $event->media_url ? asset('storage/' . $event->media_url) : asset('assets/images/small/img-1.jpg') }}" alt="Event Image" class="img-thumbnail" />            
+            <img src="{{ $event->media_url ? asset('storage/' . $event->media_url) : asset('assets/images/small/img-1.jpg') }}" alt="Event Image" class="img-thumbnail" />
         </div>
     </div>
     <div class="col-md-6">
@@ -28,7 +50,7 @@
         </div>
     </div>
 </div>
-<div class="row">
+<div class="event-details">
     <div class="col-md-6">
         <div class="mb-1">
             <label class="form-label" for="eventMode">Mode</label>
@@ -66,7 +88,6 @@
 </div>
 
 <script>
-    
     document.addEventListener('DOMContentLoaded', function () {
         var mode = {{ $event->mode }};
         var onlineUrlField = document.getElementById('onlineUrlField');

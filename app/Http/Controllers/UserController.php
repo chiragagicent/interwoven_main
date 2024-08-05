@@ -11,7 +11,7 @@ class UserController extends Controller
 {
     public function index() {
         $users = User::getUsersDetails();
-        $divToShow = 0;
+             $divToShow = 0;
             $formCount = 0;
             return view('users.users')
                 ->with('users', $users)
@@ -43,7 +43,9 @@ class UserController extends Controller
     return view('modals.user_detail_modal')->with('users', $users);
     }
 
-    public function userSearch(Request $request){
+
+      
+     public function userSearch(Request $request){
         $inputValue = $request->all();
         $searchIn = $request->search_in;
         // dd($inputValue);
@@ -116,30 +118,7 @@ class UserController extends Controller
 
         
     }
-
-/*     public function blockUser($id)
-      {
-
-          // Retrieve the current status of the user
-          $user = DB::table('users')
-                      ->select('users.is_blocked')
-                      ->where('users.user_id', $id)
-                      ->first();
-
-          if ($user) {
-              // Toggle the is_blocked status
-              $newStatus = $user->is_blocked ? 0 : 1;
-
-              // Update the is_blocked status in the database
-              DB::table('users')->where('users.user_id', $id)->update(['users.is_blocked' => $newStatus]);
-
-              return back()->with('success', 'User status updated successfully.');
-          }
-
-          return back()->with('error', 'User not found.');
-      } */
-
-      public function blockUser($id)
+    public function blockUser($id)
 {
     try {
         // Retrieve the current status of the user

@@ -119,6 +119,8 @@ class User extends Authenticatable
 
     return $userDetails;
 }
+
+
 public static function getUserSearchData($searchIn, $searchType, $suggestionText , $startDate, $endDate, $limitFlag,$userType)
 {
   $response = DB::table('users')
@@ -130,13 +132,12 @@ public static function getUserSearchData($searchIn, $searchType, $suggestionText
                   'users.user_id as userid',
                   'users.user_type',
                   'users_address.address',
+                  'users.profile_pic',
                   'users.is_blocked',
                   DB::raw("CONCAT(users.country_code, ' ', users.phone_number) as contact_info")           
               );
-            
-  /*  if ($userType) {
-        $response->where('users.user_type', $userType);
-    }  */
+              $table = 'users';
+
   for ($i = 0; $i < count($searchIn); $i++) {
       if ($searchIn[$i] == 'block_flag') {
           if ($isVerified[$i] != 'Any') {
@@ -204,6 +205,5 @@ public static function getUserSearchData($searchIn, $searchType, $suggestionText
   
   return $response;
 }
-
 
 }
