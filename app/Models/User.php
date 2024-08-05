@@ -167,7 +167,21 @@ public static function getUserSearchData($searchIn, $searchType, $suggestionText
               $response = $response->where('user_Type', '=', $userType[$i]);
           }
   
-          }else {
+          }elseif ($searchIn[$i] == 'contact_info') {
+            if ($searchType[$i] == 'contains' && $suggestionText[$i] != '') {
+                $response = $response->where(DB::raw("CONCAT(users.country_code, ' ', users.phone_number)"), 'LIKE', '%' . $suggestionText[$i] . '%');
+            }
+            if ($searchType[$i] == 'begins_with' && $suggestionText[$i] != '') {
+                $response = $response->where(DB::raw("CONCAT(users.country_code, ' ', users.phone_number)"), 'LIKE', $suggestionText[$i] . '%');
+            }
+            if ($searchType[$i] == 'exact_match' && $suggestionText[$i] != '') {
+                $response = $response->where(DB::raw("CONCAT(users.country_code, ' ', users.phone_number)"), '=', $suggestionText[$i]);
+            }
+            if ($searchType[$i] == 'ends_with' && $suggestionText[$i] != '') {
+                $response = $response->where(DB::raw("CONCAT(users.country_code, ' ', users.phone_number)"), 'LIKE', '%' . $suggestionText[$i]);
+            }
+        }
+          else {
           if ($searchType[$i] == 'contains' && $suggestionText[$i] != '') {
               $response = $response->where($searchIn[$i], 'LIKE', '%' . $suggestionText[$i] . '%');
           }

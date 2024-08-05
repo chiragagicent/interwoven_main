@@ -2,11 +2,11 @@
 
 @section('content')
 <style>
-    .user-img{
-        width: 15%;
-        height:15%;
-        margin-left: 38%;
-    }
+    .avatar-md{
+        width: 30px;
+        height:30px;
+        margin-left: 20%;
+        }
 
     .btn-search
     {
@@ -245,7 +245,7 @@
                                             <tbody>
                                                 @foreach ($users as $user)
                                                      <tr style="background-color: {{ $user->is_blocked ? 'lightcoral' : 'transparent' }};">                                                       
-                                                        <td><img src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('assets/images/users/avatar-2.jpg') }}" alt="User Image" class="mx-4 rounded-circle avatar-md"></td>
+                                                        <td><img src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : asset('assets/images/users/avatar-2.jpg') }}" alt="User Image" class="mx-4 rounded-circle avatar-md "></td>
                                                         <td><a class="user-group-details" data-id="{{ $user->userid }}" style="cursor:pointer">{{ $user->name }}</a></td>
                                                         <td>{{ $user->user_type_label }}</td>
                                                         <td>{{ $user->email_id }}</td>
@@ -253,11 +253,10 @@
                                                         <td>{{ $user->contact_info }}</td>
                                                         <td>
                                                             <div class="dropdown">
-                                                                <a class="text-dark" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                <a class="text-dark" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">  
                                                                     <i class="bx bx-dots-vertical"></i>
                                                                 </a>
                                                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                                                    {{-- <li><a class="dropdown-item" href="#" onclick="viewUserDetails({{ $user->user_id }})">View</a></li> --}}
                                                                     <li><a class="dropdown-item view-user-details" href="#" data-id="{{$user->userid }}">View</a></li>
                                                                     {{-- <li>
                                                                         <form action="#" method="POST" style="display: inline;">
@@ -369,7 +368,7 @@
                 });
 
                 var formCount = $('#formCount').val();
-
+                
                 for (i = 0; i <= 3; i++) {
                         var search_in = $('#search_in_' + i).val();
                         showHideSpan(search_in, i);
@@ -439,9 +438,9 @@
                 $('#formCount').val(formCount);
 
                 $('.add-filter').removeAttr('disabled');
-                $('#user_type_' + i).val('Any').change();
+                $('#user_type_' + index).val('Any').change();
                 //$('#active_flag_'+i).val('Any').change();
-                $('#block_flag_' + i).val('Any').change();
+                $('#block_flag_' + index).val('Any').change();
                 //   $('#report_flag_'+i).val('Any').change();
                 $('.date_range' + index).val('');
                 $('.suggestion_text' + index).val('');
@@ -485,11 +484,11 @@
                 $('#search_type_' + i).prop('disabled', false);
                 $('.suggestion_text_' + i).removeAttr("onkeyup", "checkInput(this)");
                 // $('#block_flag_span_' + i).css('display', 'none');
-                $('#block_flag_' + i).val('Any');
-                $('#sign_via_span_' + i).css('display', 'none');
+                //$('#block_flag_' + i).val('Any');
+                //$('#sign_via_span_' + i).css('display', 'none');
                 // $('#gender_flag_span_' + i).val('Any');
                 $('#user_type_span_' + i).css('display', 'none');
-                // $('#user_type' + i).val('Any');
+                $('.user_type' + i).val('Any');
                 // $('#report_flag_span_' + i).css('display', 'none');
                 // $('#report_flag_' + i).val('Any');
                 $('#date_range_span_' + i).css('display', 'none');

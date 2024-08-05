@@ -1,4 +1,3 @@
-
  <style>
     .img-thumbnail {
         width: 100%;
@@ -9,11 +8,14 @@
     .event-details {
         display: flex;
         flex-wrap: wrap;
+        justify-content: space-between;
     }
 
     .event-details .col-md-6 {
         flex: 1 1 50%; 
-    }
+        padding: 10px; 
+        box-sizing: border-box; 
+        border: none; 
 
     .event-details .form-control,
     .event-details textarea {
@@ -22,7 +24,7 @@
 </style>
 
 <div class="event-details">
-    <div class="col-md-6">
+    <div class="col-md-6 mr-2">
         <div class="mb-3">
             <img src="{{ $event->media_url ? asset('storage/' . $event->media_url) : asset('assets/images/small/img-1.jpg') }}" alt="Event Image" class="img-thumbnail" />
         </div>
